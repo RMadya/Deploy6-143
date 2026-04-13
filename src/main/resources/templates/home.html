@@ -1,10 +1,168 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NARA - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            margin: 0; 
+            padding: 30px 20px; 
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+        .container { 
+            max-width: 1000px; 
+            margin: 0 auto; 
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px 40px; 
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        h3 { font-size: 24px; font-weight: 700; color: #fff; margin-top: 0; margin-bottom: 25px; letter-spacing: 0.5px; }
+        .brand-accent { color: #8b5cf6; }
+        p { font-size: 15px; margin-bottom: 10px; color: #cbd5e1; }
+        
+        .action-link { 
+            display: inline-flex;
+            align-items: center;
+            background: rgba(139, 92, 246, 0.1);
+            color: #a78bfa; 
+            text-decoration: none; 
+            font-size: 14px; 
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+        .action-link:hover { 
+            background: rgba(139, 92, 246, 0.2);
+            color: #ddd6fe;
+            transform: translateY(-2px);
+        }
+        
+        h4 { font-size: 18px; color: #fff; margin-top: 35px; margin-bottom: 15px; font-weight: 600; }
+        
+        .table-container {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.5);
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+        }
+        th, td { 
+            padding: 14px 16px; 
+            text-align: left; 
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        th { 
+            background-color: rgba(99, 102, 241, 0.15); 
+            color: #e2e8f0; 
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+        tbody tr { transition: background-color 0.2s ease; }
+        tbody tr:hover { background-color: rgba(255, 255, 255, 0.03); }
+        tbody td { color: #cbd5e1; }
+        
+        .empty-state { text-align: center; padding: 30px; color: #64748b; font-size: 14px; font-style: italic; }
+        
+        .logout-link { 
+            display: inline-block; 
+            margin-top: 30px; 
+            font-size: 14px;
+            color: #ef4444;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: rgba(239, 68, 68, 0.1);
+            transition: all 0.3s ease;
+        }
+        .logout-link:hover {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            transform: translateX(4px);
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h3>Welcome back, <span class="brand-accent" id="displayNim"></span></h3>
+        <p>Teknologi Informasi Data Mahasiswa.</p>
+        <a href="form.html" class="action-link">+ Input Data Mahasiswa</a>
 
+        <h4>Database Internal</h4>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>NIM</th>
+                        <th>Jenis Kelamin</th>
+                    </tr>
+                </thead>
+                <tbody id="dataTable">
+                    <!-- Data will be populated here -->
+                </tbody>
+            </table>
+        </div>
+
+        <a href="#" id="logoutBtn" class="logout-link">Secure Logout</a>
+    </div>
+
+    <script>
+        if(sessionStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.href = 'login.html';
+        }
+
+        // Tampilkan nim pada header (sesuai spesifikasi)
+        const userNim = sessionStorage.getItem('userNim') || '20210140019';
+        document.getElementById('displayNim').innerText = userNim;
+
+        const dataTable = document.getElementById('dataTable');
+        let mhsData = [];
+        try {
+            mhsData = JSON.parse(sessionStorage.getItem('mhsData')) || [];
+        } catch(e) {}
+
+        if(mhsData.length === 0) {
+            dataTable.innerHTML = '<tr><td colspan="4" class="empty-state">No records found in the database</td></tr>';
+        } else {
+            dataTable.innerHTML = '';
+            mhsData.forEach((mhs, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${mhs.nama}</td>
+                    <td>${mhs.nim}</td>
+                    <td>${mhs.jk}</td>
+                `;
+                dataTable.appendChild(tr);
+            });
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            sessionStorage.removeItem('isLoggedIn');
+            sessionStorage.removeItem('userNim');
+            window.location.href = 'login.html';
+        });
+    </script>
 </body>
 </html>
