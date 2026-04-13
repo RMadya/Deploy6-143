@@ -1,10 +1,141 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NARA - Secure Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            margin: 0; 
+            padding: 20px; 
+            color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container { 
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px; 
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 420px;
+            box-sizing: border-box;
+            transform: translateY(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
+        }
+        h3 { 
+            font-size: 28px; 
+            font-weight: 700; 
+            color: #fff; 
+            margin-top: 0; 
+            margin-bottom: 30px; 
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        .form-group { margin-bottom: 20px; }
+        label { 
+            display: block; 
+            font-size: 14px; 
+            color: #cbd5e1; 
+            margin-bottom: 8px; 
+            font-weight: 500;
+        }
+        input[type="text"], input[type="password"] { 
+            width: 100%; 
+            padding: 12px 16px; 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 12px;
+            box-sizing: border-box; 
+            background-color: rgba(15, 23, 42, 0.6);
+            color: #fff;
+            transition: all 0.3s ease;
+            font-family: 'Outfit', sans-serif;
+            font-size: 15px;
+        }
+        input[type="text"]:focus, input[type="password"]:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+            outline: none;
+        }
+        button { 
+            width: 100%;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: #fff; 
+            border: none; 
+            padding: 14px 16px; 
+            font-size: 16px; 
+            font-weight: 600;
+            border-radius: 12px; 
+            cursor: pointer; 
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+        button:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.6);
+        }
+        button:active {
+            transform: translateY(1px);
+        }
+        .footer-note { 
+            margin-top: 35px; 
+            font-size: 13px; 
+            color: #94a3b8; 
+            text-align: center; 
+            font-weight: 500;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .brand-accent { color: #8b5cf6; }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h3>Welcome to <span class="brand-accent">NARA</span></h3>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="username" placeholder="Enter 'admin'" required autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Enter your NIM" required>
+            </div>
+            <button type="submit">Access Portal</button>
+        </form>
+        
+        <!-- Tulisan untuk membedakan dengan teman, bisa diubah namanya -->
+        <div class="footer-note">Dibuat oleh: NALz</div>
+    </div>
 
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            
+            // Username harus admin, password nim masing-masing (dianggap bebas asal tidak kosong)
+            if(user === 'admin' && pass.trim() !== '') {
+                sessionStorage.setItem('isLoggedIn', 'true');
+                sessionStorage.setItem('userNim', pass);
+                window.location.href = 'home.html';
+            } else {
+                alert('Access Denied: Pastikan username = admin dan password = NIM Anda.');
+            }
+        });
+    </script>
 </body>
 </html>
